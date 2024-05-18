@@ -15,12 +15,14 @@ set(IMGUI_SOURCE ${IMGUI_ROOT}/imgui.cpp ${IMGUI_ROOT}/imgui.h ${IMGUI_ROOT}/ims
         ${IMGUI_ROOT}/backends/imgui_impl_opengl3.cpp
         src/Graphics/Window.cpp
         src/Graphics/Window.h
-        src/Graphics/Layer.h)
+        src/Graphics/Layer.h
+        src/Graphics/Layers/Stats.h)
 
 add_executable(PathtracerUI ${IMGUI_SOURCE} src/main.cpp
         src/Graphics/Window.cpp
         src/Graphics/Window.h
-        src/Graphics/Layer.h)
+        src/Graphics/Layer.h
+        src/Graphics/Layers/Stats.h)
 
 find_package(OpenGL REQUIRED)
 

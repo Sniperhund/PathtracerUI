@@ -4,17 +4,38 @@
 
 #pragma once
 
+#include <string>
+
+#include <imgui.h>
+
 namespace UI {
     class Layer {
     public:
+        bool m_active = false;
+        std::string m_title;
+
+        Layer() = default;
+        ~Layer() = default;
+
         void InternalStart() {
-
+            Start();
         }
+
         void InternalUpdate() {
+            if (!m_active) {
+                return;
+            }
 
+            ImGui::Begin(m_title.c_str(), &m_active, m_flags);
+
+            Update();
+
+            ImGui::End();
         }
 
-    private:
+    protected:
+        ImGuiConfigFlags m_flags;
+
         virtual void Start() = 0;
         virtual void Update() = 0;
     };

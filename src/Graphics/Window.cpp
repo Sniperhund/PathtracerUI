@@ -11,7 +11,8 @@
 #include <cstdlib>
 #include <stdexcept>
 
-GLFWwindow* Window::s_window = nullptr;
+GLFWwindow* Window::sm_window = nullptr;
+std::vector<std::shared_ptr<UI::Layer>> Window::sm_layers = std::vector<std::shared_ptr<UI::Layer>>();
 
 void Window::CreateWindow(int width, int height) {
     if (!glfwInit()) {
@@ -40,13 +41,13 @@ void Window::CreateWindow(int width, int height) {
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
 
-    s_window = glfwCreateWindow(width, height, "Pathtracer UI", NULL, NULL);
-    if (!s_window) {
+    sm_window = glfwCreateWindow(width, height, "Pathtracer UI", NULL, NULL);
+    if (!sm_window) {
         glfwTerminate();
         throw std::runtime_error("GLFW Window could not be created");
     }
 
-    glfwMakeContextCurrent(s_window);
+    glfwMakeContextCurrent(sm_window);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -57,17 +58,17 @@ void Window::CreateWindow(int width, int height) {
 
     ImGui::StyleColorsDark();
 
-    ImGui_ImplGlfw_InitForOpenGL(s_window, true);
+    ImGui_ImplGlfw_InitForOpenGL(sm_window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    while (!glfwWindowShouldClose(s_window))
+    while (!glfwWindowShouldClose(sm_window))
     {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
 
         RenderWindows();
 
-        glfwSwapBuffers(s_window);
+        glfwSwapBuffers(sm_window);
     }
 }
 
@@ -91,6 +92,18 @@ void Window::SetupDockspace() {
     ImGuiID dockspaceId = ImGui::GetID("Dockspace");
     ImGui::DockSpace(dockspaceId, ImVec2(0, 0));
 
+    if (ImGui::BeginMenuBar()) {
+        if (ImGui::BeginMenu("View")) {
+            for (std::shared_ptr<UI::Layer> layer : sm_layers) {
+                ImGui::MenuItem(layer->m_title.c_str(), NULL, &layer->m_active);
+            }
+
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMenuBar();
+    }
+
     ImGui::End();
 }
 
@@ -101,8 +114,15 @@ void Window::RenderWindows() {
 
     SetupDockspace();
 
-    ImGui::ShowDemoWindow();
+    for (std::shared_ptr<UI::Layer> layer : sm_layers) {
+        layer->InternalUpdate();
+    }
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Window::AddUILayer(std::shared_ptr<UI::Layer> layer) {
+    sm_layers.push_back(layer);
+    layer->InternalStart();
 }

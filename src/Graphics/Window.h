@@ -5,14 +5,20 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <vector>
+#include <memory>
+#include "Layer.h"
 
 class Window {
 public:
     static void CreateWindow(int width, int height);
 
+    static void AddUILayer(std::shared_ptr<UI::Layer> layer);
+
 private:
     static void RenderWindows();
     static void SetupDockspace();
 
-    static GLFWwindow* s_window;
+    static GLFWwindow* sm_window;
+    static std::vector<std::shared_ptr<UI::Layer>> sm_layers;
 };
