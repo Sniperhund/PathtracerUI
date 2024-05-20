@@ -3,6 +3,7 @@
 //
 
 #include "Window.h"
+#include "AddMenu.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -13,11 +14,16 @@
 
 GLFWwindow* Window::sm_window = nullptr;
 std::vector<std::shared_ptr<UI::Layer>> Window::sm_layers = std::vector<std::shared_ptr<UI::Layer>>();
+float Window::sm_deltaTime = 0;
 
 void Window::CreateWindow(int width, int height) {
     if (!glfwInit()) {
         throw std::runtime_error("GLFW could not be initialized");
     }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #if defined(IMGUI_IMPL_OPENGL_ES2)
     // GL ES 2.0 + GLSL 100
@@ -49,6 +55,11 @@ void Window::CreateWindow(int width, int height) {
 
     glfwMakeContextCurrent(sm_window);
 
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        glfwTerminate();
+        throw std::runtime_error("GLAD could not be initialized");
+    }
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -61,14 +72,26 @@ void Window::CreateWindow(int width, int height) {
     ImGui_ImplGlfw_InitForOpenGL(sm_window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
+    float lastFrame = 0, lastUpdateTime = 0;
+    const float fpsLimit = 1.0f / 60.0f;
     while (!glfwWindowShouldClose(sm_window))
     {
+        float currentFrame = glfwGetTime();
+        sm_deltaTime = currentFrame - lastFrame;
+
         glfwPollEvents();
-        glClear(GL_COLOR_BUFFER_BIT);
 
-        RenderWindows();
+        if ((currentFrame - lastFrame) >= fpsLimit) {
+            glClear(GL_COLOR_BUFFER_BIT);
 
-        glfwSwapBuffers(sm_window);
+            RenderWindows();
+
+            glfwSwapBuffers(sm_window);
+
+            lastFrame = currentFrame;
+        }
+
+        lastUpdateTime = currentFrame;
     }
 }
 
@@ -108,6 +131,7 @@ void Window::SetupDockspace() {
 }
 
 void Window::RenderWindows() {
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -117,6 +141,8 @@ void Window::RenderWindows() {
     for (std::shared_ptr<UI::Layer> layer : sm_layers) {
         layer->InternalUpdate();
     }
+
+    AddMenu::ProcessAddMenu();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -8,6 +8,12 @@
 
 #include <imgui.h>
 
+#define CREATE_AND_ADD_LAYER(LayerType) \
+    { \
+        std::shared_ptr<UI::Layer> layer = std::make_shared<LayerType>(); \
+        Window::AddUILayer(layer); \
+    }
+
 namespace UI {
     class Layer {
     public:

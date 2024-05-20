@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 26)
 
 add_subdirectory(Libs/glfw)
 add_subdirectory(Libs/Pathtracer)
+add_subdirectory(Libs/glad)
 
 set(IMGUI_ROOT Libs/imgui)
 set(IMGUI_SOURCE ${IMGUI_ROOT}/imgui.cpp ${IMGUI_ROOT}/imgui.h ${IMGUI_ROOT}/imstb_rectpack.h
@@ -12,19 +13,22 @@ set(IMGUI_SOURCE ${IMGUI_ROOT}/imgui.cpp ${IMGUI_ROOT}/imgui.h ${IMGUI_ROOT}/ims
         ${IMGUI_ROOT}/imgui_draw.cpp ${IMGUI_ROOT}/imgui_internal.h ${IMGUI_ROOT}/imgui_tables.cpp
         ${IMGUI_ROOT}/imgui_widgets.cpp ${IMGUI_ROOT}/backends/imgui_impl_glfw.cpp
         ${IMGUI_ROOT}/backends/imgui_impl_glfw.h ${IMGUI_ROOT}/backends/imgui_impl_opengl3.h
-        ${IMGUI_ROOT}/backends/imgui_impl_opengl3.cpp
-        src/Graphics/Window.cpp
-        src/Graphics/Window.h
-        src/Graphics/Layer.h
-        src/Graphics/Layers/Stats.h)
+        ${IMGUI_ROOT}/backends/imgui_impl_opengl3.cpp)
 
 add_executable(PathtracerUI ${IMGUI_SOURCE} src/main.cpp
         src/Graphics/Window.cpp
         src/Graphics/Window.h
         src/Graphics/Layer.h
-        src/Graphics/Layers/Stats.h)
+        src/Graphics/Layers/StatsLayer.h
+        src/Graphics/Layers/RenderViewLayer.h
+        src/Graphics/Layers/RenderViewLayer.cpp
+        src/Graphics/Layers/RenderSettingsLayer.h
+        src/Graphics/Layers/SceneLayer.h
+        src/Graphics/Layers/SceneLayer.cpp
+        src/Graphics/AddMenu.cpp
+        src/Graphics/AddMenu.h)
 
 find_package(OpenGL REQUIRED)
 
 target_include_directories(PathtracerUI PUBLIC Libs/imgui Libs/imgui/backends Libs/glfw)
-target_link_libraries(PathtracerUI glfw OpenGL::GL Pathtracer)
+target_link_libraries(PathtracerUI glfw OpenGL::GL Pathtracer glad)
