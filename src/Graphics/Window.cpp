@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "UI/AddMenu.h"
 #include "UI/RenderView.h"
+#include "nfd.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -99,6 +100,8 @@ void Window::CreateWindow(int width, int height) {
     }
 
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+
+    NFD_Init();
 
 #if defined(IMGUI_IMPL_OPENGL_ES2)
     // GL ES 2.0 + GLSL 100

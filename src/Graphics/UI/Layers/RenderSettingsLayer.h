@@ -10,7 +10,7 @@
 // Add more settings (like depth etc)
 struct RenderSettings {
     int width = 1280, height = 720;
-    int viewportSamples = 1, renderSamples = 1024;
+    int viewportSamples = 1, renderSamples = 32;
     int maxThreads = 0;
     float viewportResolutionMultiplier = 1.0f;
     bool antialias = true;

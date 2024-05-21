@@ -2,10 +2,12 @@ cmake_minimum_required(VERSION 3.28)
 project(PathtracerUI)
 
 set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_EXE_LINKER_FLAGS -static)
 
 add_subdirectory(Libs/glfw)
 add_subdirectory(Libs/Pathtracer)
 add_subdirectory(Libs/glad)
+add_subdirectory(Libs/nativefiledialog-extended)
 
 set(IMGUI_ROOT Libs/imgui)
 set(IMGUI_SOURCE ${IMGUI_ROOT}/imgui.cpp ${IMGUI_ROOT}/imgui.h ${IMGUI_ROOT}/imstb_rectpack.h
@@ -35,4 +37,4 @@ add_executable(PathtracerUI ${IMGUI_SOURCE} src/main.cpp
 find_package(OpenGL REQUIRED)
 
 target_include_directories(PathtracerUI PUBLIC Libs/imgui Libs/imgui/backends Libs/glfw)
-target_link_libraries(PathtracerUI glfw OpenGL::GL Pathtracer glad)
+target_link_libraries(PathtracerUI glfw OpenGL::GL Pathtracer glad nfd)

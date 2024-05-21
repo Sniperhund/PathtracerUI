@@ -5,6 +5,7 @@
 #include "glad/glad.h"
 #include "RenderView.h"
 #include "imgui.h"
+#include "nfd.h"
 
 #include "Layers/SceneLayer.h"
 #include "Layers/RenderSettingsLayer.h"
@@ -22,13 +23,18 @@ void RenderView::Update() {
     static float zoomFactor = 1.0f;
     static ImVec2 imageSize;
 
-    ImGui::Begin("Render", &active, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+    ImGui::Begin("Render", &active, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar);
 
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("Save Image")) {
+                nfdchar_t* outPath;
+                NFD_SaveDialogU8(&outPath, NULL, 0, NULL, "image.png");
 
+                sm_pathtracer->GetImage()->Save(outPath);
             }
+
+            ImGui::EndMenu();
         }
 
         ImGui::EndMenuBar();
