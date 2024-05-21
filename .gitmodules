@@ -7,3 +7,6 @@
 [submodule "Libs/glfw"]
 	path = Libs/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "Libs/nativefiledialog-extended"]
+	path = Libs/nativefiledialog-extended
+	url = https://github.com/btzy/nativefiledialog-extended.git
