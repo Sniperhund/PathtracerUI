@@ -8,7 +8,11 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <memory>
-#include "Layer.h"
+#include <iostream>
+#include "UI/Layer.h"
+
+GLenum glCheckError_(const char *file, int line);
+#define glCheckError() glCheckError_(__FILE__, __LINE__)
 
 class Window {
 public:

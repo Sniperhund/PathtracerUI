@@ -7,18 +7,22 @@
 #include <mutex>
 #include <condition_variable>
 #include <thread>
-#include "../Layer.h"
 #include <memory>
-#define PATHTRACER_IGNORE_GLOBALSETTINGS 1
-#include <Pathtracer.h>
 
-class RenderViewLayer : public UI::Layer {
+#include "glad/glad.h"
+#include "../Layer.h"
+
+#include "Pathtracer.h"
+
+class ViewportViewLayer : public UI::Layer {
 public:
-    RenderViewLayer() = default;
-    ~RenderViewLayer();
+    ViewportViewLayer() = default;
+    ~ViewportViewLayer();
 
     void Start() override;
     void Update() override;
+
+    void SetShouldRender(bool value);
 
     static std::shared_ptr<Pathtracer> GetPathtracer();
 private:
@@ -27,13 +31,13 @@ private:
     void RenderThread();
 
     std::thread m_renderThread;
-    std::atomic<bool> m_shouldRender{true};
-    static std::atomic<bool> m_continueRender;
+    static std::atomic<bool> m_shouldRender;
     std::mutex m_mutex;
     std::condition_variable m_condVar;
     std::vector<unsigned char> m_pixels;
     std::vector<unsigned char> m_previousPixels;
     bool m_pixelsReady = false;
+    std::atomic<bool> m_running = true;
 
     GLuint m_textureID = 0;
     bool m_newImageAvailable = false;

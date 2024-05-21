@@ -18,15 +18,19 @@ set(IMGUI_SOURCE ${IMGUI_ROOT}/imgui.cpp ${IMGUI_ROOT}/imgui.h ${IMGUI_ROOT}/ims
 add_executable(PathtracerUI ${IMGUI_SOURCE} src/main.cpp
         src/Graphics/Window.cpp
         src/Graphics/Window.h
-        src/Graphics/Layer.h
-        src/Graphics/Layers/StatsLayer.h
-        src/Graphics/Layers/RenderViewLayer.h
-        src/Graphics/Layers/RenderViewLayer.cpp
-        src/Graphics/Layers/RenderSettingsLayer.h
-        src/Graphics/Layers/SceneLayer.h
-        src/Graphics/Layers/SceneLayer.cpp
-        src/Graphics/AddMenu.cpp
-        src/Graphics/AddMenu.h)
+        src/Graphics/UI/Layer.h
+        src/Graphics/UI/Layers/StatsLayer.h
+        src/Graphics/UI/Layers/ViewportViewLayer.h
+        src/Graphics/UI/Layers/ViewportViewLayer.cpp
+        src/Graphics/UI/Layers/RenderSettingsLayer.h
+        src/Graphics/UI/Layers/SceneLayer.h
+        src/Graphics/UI/Layers/SceneLayer.cpp
+        src/Graphics/UI/AddMenu.cpp
+        src/Graphics/UI/AddMenu.h
+        src/Graphics/UI/RenderView.cpp
+        src/Graphics/UI/RenderView.h
+        src/Util/Graphics.h
+        src/Util/Graphics.cpp)
 
 find_package(OpenGL REQUIRED)
 

@@ -5,8 +5,9 @@
 #pragma once
 
 #include "../Layer.h"
-#include "GlobalSettings.h"
+#include "ViewportViewLayer.h"
 
+// Add more settings (like depth etc)
 struct RenderSettings {
     int width = 1280, height = 720;
     int viewportSamples = 1, renderSamples = 1024;
@@ -20,8 +21,8 @@ public:
     static std::shared_ptr<RenderSettings> GetRenderSettings() { return sm_renderSettings; }
 
     static void UpdateViewportRenderValues() {
-        GlobalSettings::samplesPerPixel = sm_renderSettings->viewportSamples;
-        GlobalSettings::antialias = sm_renderSettings->antialias;
+        ViewportViewLayer::GetPathtracer()->samplesPerPixel = sm_renderSettings->viewportSamples;
+        ViewportViewLayer::GetPathtracer()->antialias = sm_renderSettings->antialias;
     }
 private:
     static std::shared_ptr<RenderSettings> sm_renderSettings;
