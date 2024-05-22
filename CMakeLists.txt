@@ -2,7 +2,15 @@ cmake_minimum_required(VERSION 3.28)
 project(PathtracerUI)
 
 set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_EXE_LINKER_FLAGS -static)
+#set(CMAKE_EXE_LINKER_FLAGS -static)
+
+IF(APPLE)
+    set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+    set(CMAKE_HAVE_THREADS_LIBRARY 1)
+    set(CMAKE_USE_WIN32_THREADS_INIT 0)
+    set(CMAKE_USE_PTHREADS_INIT 1)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+ENDIF()
 
 add_subdirectory(Libs/glfw)
 add_subdirectory(Libs/Pathtracer)
